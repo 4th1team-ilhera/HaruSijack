@@ -16,7 +16,7 @@ struct ChatView: View {
     @State var showWelcomMessage = false
     @State var isAnimation = false
     @State var humanInput: String = ""
-    @State var chatLogs: [String] = ["C:안녕하세요. 하루입니다. 무엇을 도와드릴까요?"]
+    @State var chatLogs: [String] = ["안녕하세요. 하루입니다. 무엇을 도와드릴까요?"]
     @FocusState var isTextFieldFocused: Bool
     @State var step1 = ""
     @State var step2 = ""
@@ -38,7 +38,7 @@ struct ChatView: View {
                         if log.starts(with: "H:") {
                             if let humanTalk = log.split(separator: ":").last.map(String.init)?.trimmingCharacters(in: .whitespaces) {
                                 showHumanTalk(humanTalk)
-                                Text(humanTalk)
+//                                Text(humanTalk)
                             }
                         } else {
 //                            chatbot response log
@@ -89,6 +89,7 @@ struct ChatView: View {
     // -------------------- functions ----------------------
     // 사용자 입력 전송 및 처리
     func sendUserInput() {
+        
         //사용자 입력 기록 추가
         chatLogs.append("H:" + humanInput)
         fetchResponse(message: humanInput) { result in
@@ -112,10 +113,12 @@ struct ChatView: View {
 //                    print("r_a_predicted: \(r_a_predicted)")
                     // Server 통신 코드
                     print(" 📌 - machinelearning 결과를 서버에 보냅니다.")
-                    MLResponse(message: "\(r_a_predicted)", completion: { res in
-                        print(" server 와 통신완료")
-                        
-                    })
+                    print("ra predict : 0\(r_a_predicted["승차"]!)")
+                    self.chatLogs.append("오늘 해당역의 시간대별 승차인원은 \(r_a_predicted["승차"]!) 입니다")
+//                    MLResponse(message: "\(r_a_predicted)", c mpletion: { res in
+//                        print(" server 와 통신완료")
+//                        
+//                    })
                     
                     
                 }
@@ -133,6 +136,7 @@ struct ChatView: View {
         // 챗봇이 응답하도록 로직 구현
         humanInput = ""
     }
+    
     
     // 사용자가 입력한 단어 분석 -> return값은 String으로 일단
     func generateChatBotResponse(_ quest: String) -> String {
@@ -205,7 +209,7 @@ struct ChatView: View {
     
     
     func MLResponse(message: String, completion: @escaping (Result<String, Error>) -> Void) {
-            let server_ip="http://54.180.247.41:5000/chat-api-ml"
+            let server_ip="http://54.180.247.41:5000/chat-  api-ml"
 //            let local_ip="http://127.0.0.1:5000/chat-api"
             guard let url = URL(string: server_ip ) else {
                 
@@ -281,16 +285,15 @@ struct ChatView: View {
             //오늘 군자역 5호선 혼잡도 알려줘
             
             HStack {
-                Text("")
+                Text("        ")
                     .onAppear{
                         print("talk test :\(talk)")
                         
                     }
                 Text(talk)
-
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding()
-                    .background(Color.red)
+                    .background(Color.blue)
                     .foregroundColor(.white)
                     .cornerRadius(10)
                     .transition(.scale)
@@ -316,7 +319,8 @@ struct ChatView: View {
                     
                     Image("human")
                         .resizable()
-                        .frame(width: 35, height: 35)
+                        .frame(width: 35, height: 35
+                        )
                 }
             }
             
